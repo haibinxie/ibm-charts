@@ -48,6 +48,7 @@ metadata:
     {{- end }}
     portworx.io/is-iks: "true"
     portworx.io/migration-approved: "false"
+    portworx.io/service-type: "portworx-service:NodePort;portworx-api:ClusterIP"
 spec:
   image: portworx/oci-monitor:{{ required "A valid Image tag is required in the SemVer format" .Values.imageVersion }}
   imagePullPolicy: Always
@@ -96,6 +97,8 @@ spec:
     {{- end }}
     {{- if eq $usedrivesAndPartitions true }}
     useAllWithPartitions: true
+    {{- else }}
+    useAll: true
     {{- end }}
     {{- if ne $kvdbDevice "none" }}
     kvdbDevice: {{ $kvdbDevice }}
@@ -180,13 +183,9 @@ spec:
   {{- end }}
 
   stork:
-    {{- if (and (.Values.stork) (eq .Values.stork true))}}
     enabled: true
-      {{- if .Values.storkVersion }}
+    {{- if .Values.storkVersion }}
     image: {{ template "px.getStorkImage" . }}:{{ required "A valid Image tag is required in the SemVer format" .Values.storkVersion }}
-      {{- end }}
-    {{- else }}
-    enabled: false
     {{- end }}
 
   {{- if eq $isCoreOS true}}
