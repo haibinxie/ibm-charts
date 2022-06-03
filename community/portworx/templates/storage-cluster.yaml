@@ -3,10 +3,6 @@
   {{- $telemetry := .Values.telemetry | default false }}
   {{- $isCoreOS := .Values.isTargetOSCoreOS | default false }}
   {{- $etcdEndPoints := .Values.kvdb }}
-  {{- $openshiftInstall := .Values.openshiftInstall | default false }}
-  {{- $EKSInstall := .Values.EKSInstall | default false }}
-  {{- $pksInstall := .Values.pksInstall | default false }}
-  {{- $AKSInstall := .Values.AKSInstall | default false }}
   {{- $usefileSystemDrive := .Values.usefileSystemDrive | default false }}
   {{- $usedrivesAndPartitions := .Values.usedrivesAndPartitions | default false }}
   {{- $secretType := .Values.secretType | default "k8s" }}
@@ -104,12 +100,6 @@ spec:
     kvdbDevice: {{ $kvdbDevice }}
     {{- end }}
 
-  {{- if .AKSInstall }}
-  cloudStorage:
-    deviceSpecs:
-      - type=Premium_LRS,size=150
-  {{- end }}
-
   {{- if or (ne $dataInterface "none") (ne $managementInterface "none") }}
   network:
     {{- if ne $dataInterface "none" }}
@@ -164,23 +154,6 @@ spec:
           name: "{{ $licenseSecret }}"
           key: accountKey
   {{- end }}
-  {{- if .Values.AKSInstall }}
-    - name: AZURE_CLIENT_SECRET
-      valueFrom:
-        secretKeyRef:
-          name: px-azure
-          key: AZURE_CLIENT_SECRET
-    - name: AZURE_CLIENT_ID
-      valueFrom:
-        secretKeyRef:
-          name: px-azure
-          key: AZURE_CLIENT_ID
-    - name: AZURE_TENANT_ID
-      valueFrom:
-        secretKeyRef:
-          name: px-azure
-          key: AZURE_TENANT_ID
-  {{- end }}
 
   stork:
     enabled: true
@@ -229,5 +202,4 @@ spec:
   {{- end }}
 
 {{- end }}
-
 
