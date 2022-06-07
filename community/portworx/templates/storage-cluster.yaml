@@ -6,7 +6,6 @@
   {{- $usefileSystemDrive := .Values.usefileSystemDrive | default false }}
   {{- $usedrivesAndPartitions := .Values.usedrivesAndPartitions | default false }}
   {{- $secretType := .Values.secretType | default "k8s" }}
-  {{- $deployEnvironmentIKS := .Capabilities.KubeVersion.GitVersion | regexMatch "IKS" }}
   {{- $drives := .Values.drives | default "none" }}
   {{- $dataInterface := .Values.dataInterface | default "none" }}
   {{- $managementInterface := .Values.managementInterface | default "none" }}
@@ -88,7 +87,7 @@ spec:
       - {{ $name }}
       {{- end }}
     {{- end }}
-    {{- if or $usefileSystemDrive $deployEnvironmentIKS }}
+    {{- if $usefileSystemDrive }}
     forceUseDisks: true
     {{- end }}
     {{- if eq $usedrivesAndPartitions true }}
@@ -112,10 +111,6 @@ spec:
 
   {{- if ne $secretType "none" }}
   secretsProvider: {{$secretType}}
-  {{- else }}
-    {{- if $deployEnvironmentIKS }}
-  secretsProvider: ibm-kp
-    {{- end }}
   {{- end }}
 
   env:
