@@ -1,3 +1,5 @@
+{{- if lookup "apps/v1" "DaemonSet" "kube-system" "portworx" }}
+
 {{- $customRegistryURL := .Values.customRegistryURL | default "none" }}
 {{- $registrySecret := .Values.registrySecret | default "none" }}
 
@@ -103,3 +105,4 @@ spec:
                      kubectl -n kube-system annotate ServiceMonitor portworx-prometheus-sm helm.sh/resource-policy=keep --overwrite || true;
                      ']
 
+{{- end }}

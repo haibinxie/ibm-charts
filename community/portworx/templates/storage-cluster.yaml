@@ -42,8 +42,17 @@ metadata:
     portworx.io/pvc-controller: "true"
     {{- end }}
     portworx.io/is-iks: "true"
+    {{- if lookup "apps/v1" "DaemonSet" "kube-system" "portworx" }}
     portworx.io/migration-approved: "false"
+    {{- end }}
     portworx.io/service-type: "portworx-service:NodePort;portworx-api:ClusterIP"
+  labels:
+    heritage: {{.Release.Service | quote }}
+    release: {{.Release.Name | quote }}
+    chart: "{{.Chart.Name}}-{{.Chart.Version}}"
+    app.kubernetes.io/managed-by: {{.Release.Service | quote }}
+    app.kubernetes.io/instance: {{.Release.Name | quote }}
+
 spec:
   image: portworx/oci-monitor:{{ required "A valid Image tag is required in the SemVer format" .Values.imageVersion }}
   imagePullPolicy: Always
@@ -134,10 +143,8 @@ spec:
           key: "password"
           name: "{{ $etcdSecret }}"
   {{- end }}
-  {{- if eq $csiCloudDrive true }}
-    - name: ENABLE_CSI_DRIVE
-      value: "{{ $csiCloudDrive }}"
-  {{- end }}
+  - name: ENABLE_CSI_DRIVE
+    value: "{{ $csiCloudDrive }}"
   {{- if eq $icrRegistry true }}
     - name: REGISTRY_SECRET
       value: "{{ $icrSecret }}"
@@ -179,11 +186,11 @@ spec:
     enabled: true
   {{- end }}
 
+  {{- with .Values.tolerations }}
   placement:
-    {{- with .Values.tolerations }}
     tolerations:
       {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- end }}
 
   {{- if not (eq $etcdSecret "none") }}
   volumes:
