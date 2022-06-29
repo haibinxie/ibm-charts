@@ -46,3 +46,6 @@ serviceAccount:
   hook:
     create: true
     name:
+
+deleteStrategy:                           # Delete strategy for the portworx cluster
+  type:                                   # Valid values: Uninstall, UninstallAndWipe

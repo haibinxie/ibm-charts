@@ -1,4 +1,4 @@
-{{- if or (not (lookup "apps/v1" "DaemonSet" "kube-system" "portworx")) (default true .Values.generateStorageClusterForMigration)) }}
+{{- if or (not (lookup "apps/v1" "DaemonSet" "kube-system" "portworx")) (default true .Values.generateStorageClusterForMigration) }}
 
   {{- $telemetry := .Values.telemetry | default false }}
   {{- $isCoreOS := .Values.isTargetOSCoreOS | default false }}
@@ -203,5 +203,9 @@ spec:
           path: ca.pem
   {{- end }}
 
+  {{- if .Values.deleteStrategy.type }}
+  deleteStrategy:
+    type: {{ .Values.deleteStrategy.type }}
+  {{- end }}
 {{- end }}
 
