@@ -1,8 +1,5 @@
 # Please uncomment and specify values for these options as per your requirements.
 
-generateSTCForMigration: true         # Only used for daemonset to operator migration.
-                                      #   true: generate StorageCluster based on helm parameters.
-                                      #   false: let portworx operator scan daemonset at runtime and auto-generate StorageCluster.
 kvdb:                                 # The KVDB endpoint. Should be in the format etcd:http://<your-kvdb-endpoint>:2379.
                                       # If there are multiple endpoints they need to be ";" seperated.
                                       # the default value is empty since it requires to be explicity set using either the --set option of -f values.yaml.
