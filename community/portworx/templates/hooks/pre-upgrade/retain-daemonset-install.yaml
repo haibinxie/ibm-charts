@@ -17,7 +17,7 @@ metadata:
   annotations:
     "helm.sh/hook": pre-upgrade
     "helm.sh/hook-weight": "10"
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   {{ if semverCompare ">= 1.8" .Capabilities.KubeVersion.GitVersion }}
   backoffLimit: 0
@@ -34,7 +34,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: retain-px-daemonset
-          image: {{ template "px.getK8KubectlImage" . }}:{{ template "px.kubernetesVersion" . }}
+          image: {{ template "px.getK8KubectlImage" . }}:{{ template "px.getKubectlVersion" . }}
           command: ['/bin/sh',
                     '-c',
                     'kubectl -n kube-system annotate DaemonSet portworx-api helm.sh/resource-policy=keep --overwrite;

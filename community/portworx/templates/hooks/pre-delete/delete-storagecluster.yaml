@@ -29,7 +29,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: delete-storagecluster
-          image: {{ template "px.getK8KubectlImage" . }}:{{ template "px.kubernetesVersion" . }}
+          image: {{ template "px.getK8KubectlImage" . }}:{{ template "px.getKubectlVersion" . }}
           command: ['/bin/sh',
                     '-c',
                     'kubectl -n kube-system delete storagecluster {{ $clusterName }} --ignore-not-found']
