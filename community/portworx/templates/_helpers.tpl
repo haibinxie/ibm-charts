@@ -20,6 +20,14 @@ productVersion: {{ .Values.imageVersion }}
 {{$version := .Capabilities.KubeVersion.GitVersion | regexFind "^v\\d+\\.\\d+\\.\\d+"}}{{$version}}
 {{- end -}}
 
+{{- define "px.getKubectlVersion" -}}
+{{- if (.Values.customRegistryURL) -}}
+    {{$version := .Capabilities.KubeVersion.GitVersion | regexFind "^v\\d+\\.\\d+\\.\\d+"}}{{$version}}
+{{- else -}}
+    {{ "latest" }}
+{{- end -}}
+{{- end -}}
+
 {{- define "px.getETCDPreInstallHookImage" -}}
 {{- if (.Values.customRegistryURL) -}}
     {{- if (eq "/" (.Values.customRegistryURL | regexFind "/")) -}}
